@@ -64,3 +64,6 @@ hierarchy:
     path: "common.yaml"
 vagrant@localhost:/etc/puppetlabs/code/environments/production$ 
 
+
+
+s94
