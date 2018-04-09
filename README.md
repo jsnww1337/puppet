@@ -70,42 +70,8 @@ vagrant@localhost:/etc/puppetlabs/code/environments/production$
 https://stackoverflow.com/questions/49694314/how-to-install-apache-in-puppet-with-node-roles-profiles
 how to install apache in puppet with node roles profiles
 
-I am new to puppet and trying to install apache with node, roles, profiles approach. 
-The puppet agent -t run went fine. There is a file resource created: /tmp/example-ip but I cannot get the apache running. I used my web browser to go to: localhost:8080 but nothing happens. searched for any folder with name apache find / -type d -name *apache* but nothing comes up. 
-Code:
-
-node_modules.pp
-node 'puppet-test.dev' {
-  include role::app_server
-}
-role_app_server_profiles.pp
-# Be an app server
-class role::app_server {
-  include profile::apache
-}
-profile_apache.pp
-# site specific apache config for a node
-class profile::apache {
-
-  ## configure apache 
-  include apache
-  apache::vhost { 'example.com':
-    port    => '80',
-    docroot => '/var/www/html',
-  }
-
-  ## creates a file resource
-  file {'/tmp/example-ip':
-    ensure  => present,
-    mode    => '0644',
-    content => "My ip: ${ipaddress_enp0s3}.\n",
-  }
-}
-
-======= CODE =======
-
-
 I am new to puppet and trying to install apache with node, roles, profiles approach. <br> The `puppet agent -t` run went fine. There is a file resource created: `/tmp/example-ip` but I cannot get the apache running. I used my web browser to go to: `localhost:8080` but nothing happens. searched for any folder with name apache `find / -type d -name *apache*` but nothing comes up. <br>
+======= CODE =======
 **Code:**
 
 > node_modules.pp
