@@ -176,6 +176,10 @@ __SKIP ME___
 19. see puppet agent cert fingerprint to match with signed on servewr: puppet agent --fingerprint
 20. Agent run puppet: puppet agent -t
 21. optionally enable firewall and open port 8174: iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8140 -j ACCEPT
+
+<br>
+http://garylarizza.com/blog/2014/02/17/puppet-workflow-part-2/
+<br>
 ============= DONE =================
             
     
