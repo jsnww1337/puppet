@@ -1,4 +1,4 @@
-hello world git from johnsnoww!
+Hello world git from johnsnoww!
 
 
 vagrant@localhost:/etc/puppetlabs/code/environments/production$ pwd
@@ -108,3 +108,75 @@ I am new to puppet and trying to install apache with node, roles, profiles appro
     }
 
 ======================================================================================================================
+How to install puppet:
+
+https://www.digitalocean.com/community/tutorials/how-to-install-puppet-4-in-a-master-agent-setup-on-centos-7 
+https://www.youtube.com/watch?v=u9Q0Xf1G7oU&t=298s
+
+VM: In Virtualbox preferences click: File -> Preferences -> Network -> Add a new NAT Network -> Edit NAT netwrok -> Network CIDR: 192.168.253.0/24. Network options: checked box. -> Click OK. -> On both VMS in Virtualbox click settings -> Network -> Select NAT Network -> Select created network. Do this for both VMs.
+
+Steps to install: 
+0. Configure vms and vlan (NAT Networks) in virtualbox according to "VM:" above. 
+1. disable firewall on both master and agent. Commands: 
+    systemctl disable firewalld
+    systemctl stop firewalld
+    systemctl is-enabled firewalld
+    systemctl is-active firewalld
+2.  enable official puppetlabs repo for, do this on both master and agent. Commands: 
+    Internet goto: yum.puppetlabs.com
+    Internet: copye centos version 7 .rpm link
+    Internet: OS Terminal, do this for both master and agents: 
+    From internet Paste: rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
+3.  Install puppet master and puppet agent, as listed in yum install -auto complete- or yum search for puppet:
+    Master vm command: yum install puppetserver.noarch
+    Agent vm: yum install puppet
+4.  Check VMS IP inetaddr on both master and agent: ifconfig
+5   set hostname on both master and agent:
+    Master: vim /etc/hostname
+    Content:
+            puppetmaster-01-dev.dev
+    Agent: vim /etc/hostname
+    Content: 
+            puppetagent-01-dev.dev
+6.  edit /etc/hosts
+    Master: vim /etc/hosts
+    Content add a new last row: 
+            192.168.253.4 puppetmaster-01-dev.dev
+    Agent: vim /etc/hosts
+    Content add two new last rows: 
+            192.168.253.5 puppetagent-01-dev.dev
+            192.168.253.4 puppetmaster-01-dev.dev
+7.  edit /etc/puppetlabs/puppet/puppet.conf files in master:
+    Master: vim /etc/puppetlabs/puppet/puppet.conf
+    Content: 
+            [main]
+            server = puppetmaster-01.dev.dev
+            certname = puppetmaster-01.dev.dev
+__SKIP ME___            
+            [master]
+            .... add to buttom of all rows ....
+            dns_alt_name = puppetmaster-01.dev.dev
+8.  start puppet master: systemctl start puppetserver.service
+9.  enable puppetmaster on master server boot: systemctl enable puppetserver
+10. check if puppetmaster is started: systemctl is-active puppetserver.service
+11. check if puppetmaster is enabled: systemctl is-enabled puppetserver.service
+12. edit /etc/hosts/puppetlabs/puppet/puppet.conf files in agent: 
+    Agent: vim /etc/puppetlabs/puppet/puppet.conf
+    Content: 
+            .... add to buttom of all rows ....
+            [main]
+            certname = puppetagent-01-dev.dev
+            server = puppetmaster-01-dev.dev
+13. puppetmaster list all pending certificates: puppet cert list
+14. puppetmaster list all pending and signed certs: puppet cert list --all
+15. master and agent print current cert name: puppet config print certname
+16. sign a cert where puppetagent-01-dev.dev is the agent cert: puppet cert sign puppetagent-01-dev.dev
+17. optionally sign all certs: puppet cert sign --all
+18. optionally view all signed requests where "+" is signed and without are not signed certs: puppet cert list --all
+19. see puppet agent cert fingerprint to match with signed on servewr: puppet agent --fingerprint
+20. Agent run puppet: puppet agent -t
+21. optionally enable firewall and open port 8174: iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8140 -j ACCEPT
+============= DONE =================
+            
+    
+
