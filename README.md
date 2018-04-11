@@ -76,10 +76,15 @@ I am new to puppet and trying to install apache with node, roles, profiles appro
 
 > node_modules.pp
 
-    node 'puppet-test.dev' {
+    # controls nodes with node -> role -> profile approach
+    node 'puppetagent-01-dev.dev' {
       include role::app_server
     }
-
+    
+    node 'puppetagent-01-test.dev' {
+      include role::db_server
+    }
+    
 > role_app_server_profiles.pp
 
     # Be an app server
@@ -127,18 +132,51 @@ Steps to install:
     Internet: copye centos version 7 .rpm link
     Internet: OS Terminal, do this for both master and agents: 
     From internet Paste: rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
-3.  Install puppet master and puppet agent, as listed in yum install -auto complete- or yum search for puppet:
+3.  Optional - set repo to access puppet:
+    vim /etc/yum.repos.d/puppetlabs-pc1.repo
+    content: 
+    ...
+    [puppetlabs-pc1]
+    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs-PC1
+          file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppet-PC1
+    ...
+    [puppetlabs-pc1-source]
+    gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs-PC1
+          file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puppet-PC1
+    ...
+4.  Optional - set RPM GPG KEY puppet manual edit or scp from master: 
+    vim /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet-PC1 
+    and 
+    RPM-GPG-KEY-puppetlabs-PC1
+    
+    terminal where 192.168.253.6 and 192.168.253.5 are agent 1 and agent 2 ip's and /tmp is in which folder file placed target machine: 
+    scp /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet-PC1 username@192.168.253.6:/tmp
+    scp /etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs-PC1 username@192.168.253.6:/tmp
+    scp /etc/pki/rpm-gpg/RPM-GPG-KEY-puppet-PC1 username@192.168.253.5:/tmp
+    scp /etc/pki/rpm-gpg/RPM-GPG-KEY-puppetlabs-PC1 username@192.168.253.5:/tmp
+    
+6.  Move keys in host vms terminals: 
+    mv /tmp/RPM-GPG-KEY-puppet-PC1 /etc/pki/rpm-gpg/
+    mv /tmp/RPM-GPG-KEY-puppetlabs-PC1 /etc/pki/rpm-gpg/
+    
+7.  clean yum cache: 
+    yum clean all
+8.  yum make cache:
+    yum makecache fast
+    
+9.  Install puppet master and puppet agent, as listed in yum install -auto complete- or yum search for puppet:
     Master vm command: yum install puppetserver.noarch
-    Agent vm: yum install puppet
-4.  Check VMS IP inetaddr on both master and agent: ifconfig
-5   set hostname on both master and agent:
+    Agent vm: yum install puppet-agent.x86_64
+
+10.  Check VMS IP inetaddr on both master and agent: ifconfig
+11.  set hostname on both master and the two agents:
     Master: vim /etc/hostname
     Content:
             puppetmaster-01-dev.dev
     Agent: vim /etc/hostname
     Content: 
             puppetagent-01-dev.dev
-6.  edit /etc/hosts
+12.  edit /etc/hosts
     Master: vim /etc/hosts
     Content add a new last row: 
             192.168.253.4 puppetmaster-01-dev.dev
@@ -146,7 +184,7 @@ Steps to install:
     Content add two new last rows: 
             192.168.253.5 puppetagent-01-dev.dev
             192.168.253.4 puppetmaster-01-dev.dev
-7.  edit /etc/puppetlabs/puppet/puppet.conf files in master:
+13.  edit /etc/puppetlabs/puppet/puppet.conf files in master:
     Master: vim /etc/puppetlabs/puppet/puppet.conf
     Content: 
             [main]
@@ -156,26 +194,34 @@ __SKIP ME___
             [master]
             .... add to buttom of all rows ....
             dns_alt_name = puppetmaster-01.dev.dev
-8.  start puppet master: systemctl start puppetserver.service
-9.  enable puppetmaster on master server boot: systemctl enable puppetserver
-10. check if puppetmaster is started: systemctl is-active puppetserver.service
-11. check if puppetmaster is enabled: systemctl is-enabled puppetserver.service
-12. edit /etc/hosts/puppetlabs/puppet/puppet.conf files in agent: 
-    Agent: vim /etc/puppetlabs/puppet/puppet.conf
-    Content: 
+14.   start puppet master: systemctl start puppetserver.service
+15.   enable puppetmaster on master server boot: systemctl enable puppetserver
+16.   check if puppetmaster is started: systemctl is-active puppetserver.service
+17.   check if puppetmaster is enabled: systemctl is-enabled puppetserver.service
+18.   edit /etc/hosts/puppetlabs/puppet/puppet.conf files the two agents: 
+  Agent1: vim /etc/puppetlabs/puppet/puppet.conf
+  Content: 
             .... add to buttom of all rows ....
             [main]
             certname = puppetagent-01-dev.dev
             server = puppetmaster-01-dev.dev
-13. puppetmaster list all pending certificates: puppet cert list
-14. puppetmaster list all pending and signed certs: puppet cert list --all
-15. master and agent print current cert name: puppet config print certname
-16. sign a cert where puppetagent-01-dev.dev is the agent cert: puppet cert sign puppetagent-01-dev.dev
-17. optionally sign all certs: puppet cert sign --all
-18. optionally view all signed requests where "+" is signed and without are not signed certs: puppet cert list --all
-19. see puppet agent cert fingerprint to match with signed on servewr: puppet agent --fingerprint
-20. Agent run puppet: puppet agent -t
-21. optionally enable firewall and open port 8174: iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8140 -j ACCEPT
+
+  Agent2: vim /etc/puppetlabs/puppet/puppet.conf
+  Content: 
+            .... add to buttom of all rows ....
+            [main]
+            certname = puppetagent-01-test.dev
+            server = puppetmaster-01-dev.dev
+
+19. puppetmaster list all pending certificates: puppet cert list
+20. puppetmaster list all pending and signed certs: puppet cert list --all
+21. master and agent print current cert name: puppet config print certname
+22. sign a cert where puppetagent-01-dev.dev is the agent cert: puppet cert sign puppetagent-01-dev.dev
+23. optionally sign all certs: puppet cert sign --all
+24. optionally view all signed requests where "+" is signed and without are not signed certs: puppet cert list --all
+25. see puppet agent cert fingerprint to match with signed on servewr: puppet agent --fingerprint
+26. Agent run puppet: puppet agent -t
+27. optionally enable firewall and open port 8174: iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 8140 -j ACCEPT
 
 <br>
 http://garylarizza.com/blog/2014/02/17/puppet-workflow-part-2/
