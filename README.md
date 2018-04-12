@@ -62,7 +62,7 @@ Hello world git from johnsnoww!
 How to install apache in puppet with node roles profiles <br>
 https://stackoverflow.com/questions/49694314/how-to-install-apache-in-puppet-with-node-roles-profiles <br>
 
-Scenario: install apache with node, roles, profiles approach. The `puppet agent -t` run went fine. <br> File resource created: `/tmp/example-ip` In web browser go to: `localhost:80` Search for any folder with name apache: `find / -type d -name *apache*` see if anything appears. Verify installation by going to: localhost:80
+Scenario: install apache with node, roles, profiles approach. The `puppet agent -t` run went fine. <br> File resource created: `/tmp/example-ip` In web browser go to: `localhost:80` <br> Search for any folder with name apache: `find / -type d -name *apache*` see if anything appears. <br>Verify installation by going to: `localhost:80`
 <br><br>
 **Code:**
 
