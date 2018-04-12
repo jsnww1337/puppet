@@ -1,5 +1,5 @@
 Hello world git from johnsnoww!
-======================================================================================================================
+=================================================================================
 **Hiera**
 > hiera.yaml - config file
 
@@ -58,11 +58,11 @@ Hello world git from johnsnoww!
         - "%{lookup('ips.office1')}"
         - "%{lookup('ips.office2')}"
 
-======================================================================================================================
+=================================================================================
 https://stackoverflow.com/questions/49694314/how-to-install-apache-in-puppet-with-node-roles-profiles
-how to install apache in puppet with node roles profiles
+How to install apache in puppet with node roles profiles
 
-I am new to puppet and trying to install apache with node, roles, profiles approach. <br> The `puppet agent -t` run went fine. There is a file resource created: `/tmp/example-ip` but I cannot get the apache running. I used my web browser to go to: `localhost:8080` but nothing happens. searched for any folder with name apache `find / -type d -name *apache*` but nothing comes up. <br>*SOLUTION* GOto: localhost:80
+Scenario: install apache with node, roles, profiles approach. The `puppet agent -t` run went fine. <br> File resource created: `/tmp/example-ip` In web browser go to: `localhost:80` Search for any folder with name apache `find / -type d -name *apache*` see if anything appears. Verify installation by going to: localhost:80
 ======= CODE =======
 **Code:**
 
@@ -105,8 +105,9 @@ I am new to puppet and trying to install apache with node, roles, profiles appro
     }
 
 ======================================================================================================================
-How to install puppet:
+How to install puppet step-by-step scenario:
 
+Resources:
 https://www.digitalocean.com/community/tutorials/how-to-install-puppet-4-in-a-master-agent-setup-on-centos-7 
 https://www.youtube.com/watch?v=u9Q0Xf1G7oU&t=298s
 
@@ -115,10 +116,10 @@ VM: In Virtualbox preferences click: File -> Preferences -> Network -> Add a new
 Steps to install: 
 0. Configure vms and vlan (NAT Networks) in virtualbox according to "VM:" above. 
 1. disable firewall on both master and agent. Commands: 
-    systemctl disable firewalld
-    systemctl stop firewalld
-    systemctl is-enabled firewalld
-    systemctl is-active firewalld
+        systemctl disable firewalld
+        systemctl stop firewalld
+        systemctl is-enabled firewalld
+        systemctl is-active firewalld
 2.  enable official puppetlabs repo for, do this on both master and agent. Commands: 
     Internet goto: yum.puppetlabs.com
     Internet: copye centos version 7 .rpm link
