@@ -107,7 +107,7 @@ Scenario: install apache with node, roles, profiles approach. The `puppet agent 
 =================================================================================
 How to install puppet step-by-step scenario:
 
-Resources:
+Resources:<br>
 https://www.digitalocean.com/community/tutorials/how-to-install-puppet-4-in-a-master-agent-setup-on-centos-7 
 https://www.youtube.com/watch?v=u9Q0Xf1G7oU&t=298s
 
