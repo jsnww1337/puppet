@@ -111,7 +111,7 @@ Resources:<br>
 https://www.digitalocean.com/community/tutorials/how-to-install-puppet-4-in-a-master-agent-setup-on-centos-7 
 https://www.youtube.com/watch?v=u9Q0Xf1G7oU&t=298s
 
-VM: In Virtualbox preferences click: File -> Preferences -> Network -> Add a new NAT Network -> Edit NAT netwrok -> Network CIDR: 192.168.253.0/24. Network options: checked box. -> Click OK. -> On both VMS in Virtualbox click settings -> Network -> Select NAT Network -> Select created network. Do this for both VMs.
+VM: In Virtualbox preferences click: File -> Preferences -> Network -> Add a new NAT Network -> Edit NAT netwrok -> Network CIDR: 192.168.253.0/24. Network options: checked box. -> Click OK. -> On both VMS in Virtualbox click settings -> Network -> Select NAT Network -> Select created network. Do this for both VMs. !!! OR BRDIGED ADAPTER CAN ALSO BE USED !!!
 
 Steps to install: 
 0. Configure vms and vlan (NAT Networks) in virtualbox according to "VM:" above. 
@@ -215,6 +215,8 @@ __SKIP ME___
 14.   start puppet master: 
 
     systemctl start puppetserver.service
+__IF ISSUE, SET MEMORY ALLOCATION TO 512M AND SYSTEMCTL RELOAD PUPPETSERVER___
+    sudo vi /etc/sysconfig/puppetserver
     
 15.   enable puppetmaster on master server boot: 
 
