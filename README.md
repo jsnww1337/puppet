@@ -216,7 +216,7 @@ __SKIP ME___
 
     systemctl start puppetserver.service
 __IF ISSUE, SET MEMORY ALLOCATION TO 512M AND SYSTEMCTL RELOAD PUPPETSERVER___
-    sudo vi /etc/sysconfig/puppetserver
+    'sudo vi /etc/sysconfig/puppetserver'
     
 15.   enable puppetmaster on master server boot: 
 
