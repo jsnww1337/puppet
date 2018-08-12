@@ -22,3 +22,22 @@ bind::a {'example.com':
   },
 }
 }
+
+
+
+
+
+
+
+class profile::dnsbind::server_slave {
+
+include 'bind'
+
+    bind::zone {'example.com':
+      ensure           => 'present',
+      zone_origin      => 'example.com',
+      zone_type        => 'slave',
+      zone_masters     => '10.0.2.5',
+      transfer_source  => '10.0.2.5',
+}
+}
